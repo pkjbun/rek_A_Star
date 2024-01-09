@@ -19,12 +19,14 @@ public class UnitStats
     /// <param name="speed"> speed of unity</param>
     /// <param name="maneuverability">maneuverability of unit</param>
     /// <param name="durability"> durability of unit</param>
+   
     public UnitStats(float speed, float maneuverability, float durability)
     {   
         this.Speed = speed;
         this.Durablibity = durability;
         this.Maneuverability = maneuverability;
     }
+    public UnitStats() { }
     public void GenerateRandomStats()
     {
         Speed = Random.Range(0, 100f);

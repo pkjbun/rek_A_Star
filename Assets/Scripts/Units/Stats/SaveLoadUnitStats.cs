@@ -14,8 +14,13 @@ public class SaveLoadUnitStats : MonoBehaviour
     /// To save Unit Stats to file. It uses Helper class to serilize list
     /// </summary>
     public void SaveUnitStats()
-    {
-        //TODO: Get Unit Stats from Unit manager and fill list;
+    {   if(UnitManager.GetInstance()==null) {
+            Debug.Log("Missing Unit Manager");
+            return; }
+        listOfUnitStats.Clear(); //CLEAR list to ensure that there are no old stats
+        foreach (UnitBase unit in UnitManager.GetInstance().GetListOfUnit()) {
+            listOfUnitStats.Add(unit.GetUnitStats());
+        }
         string json = JsonUtility.ToJson(new Serialization<UnitStats>(listOfUnitStats));
         string path = Path.Combine(Application.dataPath, "../Data/unitStats.json");
         File.WriteAllText(path, json);
@@ -37,10 +42,31 @@ public class SaveLoadUnitStats : MonoBehaviour
             Debug.LogError("Nie znaleziono pliku: " + path);
         }
     }
-
+    /// <summary>
+    /// Method Used to restore unit stats basing on list from file
+    /// </summary>
     private void UpdateUnitStats()
     {
-        //TODO: after UnitManager is ready make method to restore unit data
+        if (UnitManager.GetInstance() == null)
+        {
+            Debug.Log("Missing Unit Manager, can't restore stats");
+            return;
+        }
+        List<UnitBase> LUnitBase = UnitManager.GetInstance().GetListOfUnit();
+        int counter=0;
+        if(LUnitBase.Count>= listOfUnitStats.Count)
+        {
+            counter = listOfUnitStats.Count;
+        }
+        else
+        {
+            counter = LUnitBase.Count;
+          
+        }  
+        for (int i = 0; i < counter; i++)
+            {
+                LUnitBase[i].SetUnitStats(listOfUnitStats[i]);
+            }
     }
     #endregion
 }
