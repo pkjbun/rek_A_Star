@@ -9,6 +9,7 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private List<UnitBase> listOfUnits=new List<UnitBase>();
     [SerializeField] private UnitBase currentLeadingUnit;
     [SerializeField] private Transform spawnPoint;
+    [SerializeField] private float spacing;
     private static UnitManager instance;
 
 
@@ -22,6 +23,7 @@ public class UnitManager : MonoBehaviour
     void Start()
     {
         SpawnUnits();
+        SetCurrentLeadingUnit(0);
     }
 
     // Update is called once per frame
@@ -34,7 +36,7 @@ public class UnitManager : MonoBehaviour
     public void SpawnUnits()
     {
         int numberOfUnits = GameManager.GetInstance().GetNumberOfUnits();
-        float spacing = 0.7f;
+        
 
         for (int i = 0; i < numberOfUnits; i++)
         {

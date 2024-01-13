@@ -37,8 +37,9 @@ namespace AStar
         /// Setups Node, sets refrence to Grid Manager
         /// </summary>
         /// <param name="GridManager">refrenece to Grid Manager</param>
-        public void Setup(GridManager GridManager)
+        public void Setup(GridManager GridManager, NodeData data)
         {
+            nodeData = data;
             gridManager = GridManager;
         }
         public List<Node> GetAdjacencies()

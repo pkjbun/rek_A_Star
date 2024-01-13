@@ -16,11 +16,8 @@ namespace AStar.UI {
         // Start is called before the first frame update
         void Start()
         {
-            GenerateUnitButtons();
+          StartCoroutine(  GenerateUnitButtons());
         }
-
-  
-
         // Update is called once per frame
         void Update()
         {
@@ -48,8 +45,9 @@ namespace AStar.UI {
         /// <summary>
         /// Method for generating unit
         /// </summary>
-        private void GenerateUnitButtons()
+        private IEnumerator GenerateUnitButtons()
         {
+            yield return new WaitForEndOfFrame();
             if (buttonPrefab != null && buttonParent != null)
             {
                 List<UnitBase> ub = UnitManager.GetInstance()?.GetListOfUnit();
@@ -57,6 +55,9 @@ namespace AStar.UI {
                 {
                     Button buttonInst = Instantiate(buttonPrefab, buttonParent);
                     buttonDictionary.Add(buttonInst, i);
+                    UnitButtonController btnComp;
+                    if(buttonInst.TryGetComponent<UnitButtonController>( out btnComp))
+                    { btnComp?.SetText(i.ToString()); }
                     // Create a local copy of buttonInst
                     Button localButtonInst = buttonInst;
                     buttonInst.onClick.AddListener(() => SelectUnitNr(localButtonInst));

@@ -24,7 +24,7 @@ public class SaveLoadUnitStats : MonoBehaviour
         string json = JsonUtility.ToJson(new Serialization<UnitStats>(listOfUnitStats));
         string path = Path.Combine(Application.dataPath, "../Data/unitStats.json");
         File.WriteAllText(path, json);
-        Debug.Log("Zapisano listê UnitStats do " + path);
+        Debug.Log("Saved UnitStats to " + path);
     }
     public void LoadUnitsStat()
     {
@@ -34,12 +34,12 @@ public class SaveLoadUnitStats : MonoBehaviour
         {
             string json = File.ReadAllText(path);
             listOfUnitStats = JsonUtility.FromJson<Serialization<UnitStats>>(json).ToList();
-            Debug.Log("Wczytano listê UnitStats z " + path);
+            Debug.Log("Loaded UnitStats from " + path);
             UpdateUnitStats();
         }
         else
         {
-            Debug.LogError("Nie znaleziono pliku: " + path);
+            Debug.LogError("No file: " + path);
         }
     }
     /// <summary>
