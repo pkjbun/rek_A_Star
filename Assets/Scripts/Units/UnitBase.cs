@@ -9,7 +9,9 @@ public class UnitBase : MonoBehaviour, IUnit
     [SerializeField] private UnitStats unitStats=new UnitStats();
     [SerializeField] private Node currentNode;
     [SerializeField] private Collider[] coll=new Collider[1];
-    private Stack<Node> stack = new Stack<Node>();
+    [SerializeField] float moveSpeed = 1f;
+    private Stack<Node> path = new Stack<Node>();
+    Coroutine moveRoutine;
     #endregion
   
     #region Unity Methods
@@ -33,7 +35,31 @@ public class UnitBase : MonoBehaviour, IUnit
 
         public void Move(Stack<Node> nodes)
         {
-         //   throw new System.NotImplementedException();
+        path = nodes;
+        moveRoutine = StartCoroutine(MoveAlong());
+        }
+        IEnumerator MoveAlong()
+        {while (true)
+            {
+            if (currentNode == null)
+            {
+                if (path.Count == 0)
+                {
+                        StopMoving();
+                   yield break; // Path is completed
+                }
+                currentNode = path.Pop();
+                }
+        
+                Vector3 targetPosition = currentNode.transform.position;
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+
+                if (transform.position == targetPosition)
+                {
+                    currentNode = null; // Reached the node, move to the next one
+                }
+                yield return new WaitForEndOfFrame();
+                }
         }
         /// <summary>
         /// Sets Unit Stats
@@ -47,7 +73,8 @@ public class UnitBase : MonoBehaviour, IUnit
 
         public void StopMoving()
         {
-         //  throw new System.NotImplementedException();
+        if (moveRoutine != null) StopCoroutine(moveRoutine);
+        DetectCurrentNode();
         }
         /// <summary>
         /// Generates random Unit Stats in case of more complex game it would  be diffrent 

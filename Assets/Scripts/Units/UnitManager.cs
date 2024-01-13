@@ -83,9 +83,14 @@ public class UnitManager : MonoBehaviour
         }
     }
     public List<UnitBase> GetListOfUnit() { return listOfUnits; }
-    public void HandleMoveUnits()
+    /// <summary>
+    /// Move Units Along the path
+    /// </summary>
+    /// <param name="path"></param>
+    private void HandleMoveUnits(Stack<Node> path)
     {
-        //TODO:write it...
+        currentLeadingUnit.StopMoving();
+        currentLeadingUnit.Move(path);
     } 
     public void HandleInput(Node EndNode)
     {
@@ -95,6 +100,10 @@ public class UnitManager : MonoBehaviour
         foreach(Node node in nodeStack)
         {
             Debug.Log("Should walk thorought" + node.name);
+        }
+        if(nodeStack.Count > 0)
+        {
+            HandleMoveUnits(nodeStack);
         }
     }
     public static UnitManager GetInstance() {return instance;}
