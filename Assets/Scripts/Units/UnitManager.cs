@@ -2,6 +2,7 @@ using AStar;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UnitManager : MonoBehaviour
@@ -118,7 +119,9 @@ public class UnitManager : MonoBehaviour
     /// <param name="path"></param>
     private void HandleMoveUnits(Stack<Node> path)
     {
-        currentLeadingUnit.Move(path);
+        Stack<Node> lp = Helper<Node>.CopyStack(path);
+       
+        currentLeadingUnit.Move(lp);
         StartCoroutine(MoveOther(path));
     } 
     IEnumerator MoveOther(Stack<Node> path)
@@ -126,8 +129,11 @@ public class UnitManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         for(int i=0; i<listOfUnits.Count; i++)
         {
-            if (listOfUnits[i] != currentLeadingUnit) { listOfUnits[i].Move(path); }
-            yield return new WaitForSeconds(0.1f);
+            
+            if (listOfUnits[i] != currentLeadingUnit) {Stack<Node> lp = Helper<Node>.CopyStack(path);
+
+                listOfUnits[i].Move(lp); }
+            yield return new WaitForEndOfFrame();
         }
     }
     public void HandleInput(Node EndNode)

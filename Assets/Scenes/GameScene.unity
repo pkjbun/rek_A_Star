@@ -614,7 +614,7 @@ MonoBehaviour:
   listOfUnits: []
   currentLeadingUnit: {fileID: 0}
   spawnPoint: {fileID: 515164054}
-  spacing: 1.2
+  spacing: 3
   gridManager: {fileID: 0}
 --- !u!4 &266368139
 Transform:
@@ -1543,7 +1543,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 288392011}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.60999995
+  m_Size: 0.61
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1668,7 +1668,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 384128896}
   m_HandleRect: {fileID: 384128895}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

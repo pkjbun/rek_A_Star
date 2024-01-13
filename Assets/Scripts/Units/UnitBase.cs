@@ -47,7 +47,9 @@ public class UnitBase : MonoBehaviour, IUnit
         moveRoutine = StartCoroutine(MoveAlong());
         }
         IEnumerator MoveAlong()
-        {while (true)
+        {
+        
+        while (true)
             {
             if (currentNode == null)
             {
@@ -58,7 +60,7 @@ public class UnitBase : MonoBehaviour, IUnit
                    yield break; // Path is completed
                 }
                 currentNode = path.Pop();
-                }
+            }
         
                 Vector3 targetPosition = currentNode.transform.position;
                 transform.LookAt(targetPosition);
