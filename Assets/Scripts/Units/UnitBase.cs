@@ -1,4 +1,5 @@
 using AStar;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,8 +13,14 @@ public class UnitBase : MonoBehaviour, IUnit
     [SerializeField] float moveSpeed = 1f;
     private Stack<Node> path = new Stack<Node>();
     Coroutine moveRoutine;
+    public Event leadEndAction;
+    // Delegate for unit events
+    public delegate void UnitEventHandler(UnitBase unit);
+
+    // Event triggered when the unit finishes a task
+    public event UnitEventHandler OnTaskCompleted;
     #endregion
-  
+
     #region Unity Methods
     // Start is called before the first frame update
     void Start()
@@ -36,6 +43,7 @@ public class UnitBase : MonoBehaviour, IUnit
         public void Move(Stack<Node> nodes)
         {
         path = nodes;
+        StopMoving();
         moveRoutine = StartCoroutine(MoveAlong());
         }
         IEnumerator MoveAlong()
@@ -45,13 +53,15 @@ public class UnitBase : MonoBehaviour, IUnit
             {
                 if (path.Count == 0)
                 {
-                        StopMoving();
+                    OnTaskCompleted?.Invoke(this);
+                    StopMoving();
                    yield break; // Path is completed
                 }
                 currentNode = path.Pop();
                 }
         
                 Vector3 targetPosition = currentNode.transform.position;
+                transform.LookAt(targetPosition);
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
 
                 if (transform.position == targetPosition)
@@ -94,5 +104,18 @@ public class UnitBase : MonoBehaviour, IUnit
             }
         }
         public Node GetCurrentNode() { return currentNode; }
+    /// <summary>
+    /// After Leading Unit ends his task all Units stops
+    /// </summary>
+   
+    public void ReceiveNotification()
+    {
+        StopMoving();
+    }
+
+    public void ReceiveNotification(IUnit unit)
+    {
+      //
+    }
     #endregion
 }

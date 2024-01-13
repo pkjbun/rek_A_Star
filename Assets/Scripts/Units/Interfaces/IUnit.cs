@@ -19,5 +19,7 @@ public interface IUnit
     /// </summary>
     /// <returns>Stats of Unit</returns>
     public UnitStats GetUnitStats();
-#endregion
+    public void ReceiveNotification();
+    public void ReceiveNotification(IUnit unit);
+    #endregion
 }

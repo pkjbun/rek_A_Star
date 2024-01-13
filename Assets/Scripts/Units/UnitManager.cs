@@ -1,4 +1,5 @@
 using AStar;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,7 +36,10 @@ public class UnitManager : MonoBehaviour
     }
     #endregion
     #region Custom Methods
-    public void SpawnUnits()
+    /// <summary>
+    /// Method for sapwning Units at start
+    /// </summary>
+    private void SpawnUnits()
     {
         int numberOfUnits = GameManager.GetInstance().GetNumberOfUnits();
         
@@ -77,11 +81,36 @@ public class UnitManager : MonoBehaviour
     /// <param name="nr">number of unit(in list), that should be set as leading</param>
     public void SetCurrentLeadingUnit(int nr)
     {
-        if(nr<listOfUnits.Count)
+        if (currentLeadingUnit != null)
         {
+            // Unsubscribe all units from the old leading unit's event
+            currentLeadingUnit.OnTaskCompleted -= OnLeadingUnitTaskCompleted;
+        }
+
+        if (nr<listOfUnits.Count)
+        {   
             currentLeadingUnit = listOfUnits[nr];
         }
+        if (currentLeadingUnit != null)
+        {
+            // Subscribe all units to the new leading unit's event
+            currentLeadingUnit.OnTaskCompleted += OnLeadingUnitTaskCompleted;
+        }
+        ///just to ensure that there is no missing references
+        if (listOfUnits[nr] == null) { listOfUnits.RemoveAll(x => x = null); };
     }
+
+    private void OnLeadingUnitTaskCompleted(UnitBase unit)
+    {
+        foreach (var otherUnit in listOfUnits)
+        {
+            if (otherUnit != currentLeadingUnit)
+            {
+                otherUnit.ReceiveNotification();
+            }
+        }
+    }
+
     public List<UnitBase> GetListOfUnit() { return listOfUnits; }
     /// <summary>
     /// Move Units Along the path
@@ -89,9 +118,18 @@ public class UnitManager : MonoBehaviour
     /// <param name="path"></param>
     private void HandleMoveUnits(Stack<Node> path)
     {
-        currentLeadingUnit.StopMoving();
         currentLeadingUnit.Move(path);
+        StartCoroutine(MoveOther(path));
     } 
+    IEnumerator MoveOther(Stack<Node> path)
+    {
+        yield return new WaitForEndOfFrame();
+        for(int i=0; i<listOfUnits.Count; i++)
+        {
+            if (listOfUnits[i] != currentLeadingUnit) { listOfUnits[i].Move(path); }
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
     public void HandleInput(Node EndNode)
     {
         if (EndNode == null) { return; }
