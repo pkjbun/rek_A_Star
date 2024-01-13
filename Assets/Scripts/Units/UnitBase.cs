@@ -8,6 +8,7 @@ public class UnitBase : MonoBehaviour, IUnit
     #region Fields And Variables
     [SerializeField] private UnitStats unitStats=new UnitStats();
     [SerializeField] private Node currentNode;
+    [SerializeField] private Collider[] coll=new Collider[1];
     #endregion
   
     #region Unity Methods
@@ -29,7 +30,7 @@ public class UnitBase : MonoBehaviour, IUnit
            return unitStats;
         }
 
-        public void MoveTo()
+        public void Move(Stack<Node> nodes)
         {
          //   throw new System.NotImplementedException();
         }
@@ -47,12 +48,22 @@ public class UnitBase : MonoBehaviour, IUnit
         {
          //  throw new System.NotImplementedException();
         }
-    /// <summary>
-    /// Generates random Unit Stats in case of more complex game it would  be diffrent 
-    /// </summary>
-    public void UnitSetup()
-    {
-        unitStats.GenerateRandomStats();
-    }
+        /// <summary>
+        /// Generates random Unit Stats in case of more complex game it would  be diffrent 
+        /// </summary>
+        public void UnitSetup()
+        {
+            unitStats.GenerateRandomStats();
+        }
+        public void DetectCurrentNode()
+        {
+            coll[0] = null; 
+            Physics.OverlapSphereNonAlloc(transform.position, 0.3f, coll, GridManager.GetInstance().GetLayerMask(),QueryTriggerInteraction.Collide);
+            if (coll[0] != null)
+            {
+               Node n= coll[0].GetComponentInParent<Node>();
+            if(n != null) { currentNode = n; }
+            }
+        }
     #endregion
 }

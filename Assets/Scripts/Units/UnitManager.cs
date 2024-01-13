@@ -45,7 +45,8 @@ public class UnitManager : MonoBehaviour
             UnitStats us = new UnitStats();
             UnitBase newUnit = Instantiate(unitPrefab, spawnPosition, Quaternion.identity);
             newUnit.SetUnitStats(us);
-             newUnit.UnitSetup();
+            newUnit.UnitSetup();
+            newUnit.DetectCurrentNode();
             listOfUnits.Add(newUnit);
         }
     }

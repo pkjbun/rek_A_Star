@@ -88,7 +88,7 @@ namespace AStar
         {
             return nodeData.IsWalkable;
         }
-        public float  CalculateMoveF()
+        public float CalculateMoveF()
         {
             if (DistanceToTarget != -1 && CurrrentCost != -1)
                 return DistanceToTarget + CurrrentCost;

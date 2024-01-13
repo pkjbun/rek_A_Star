@@ -12,11 +12,14 @@ namespace AStar
         [SerializeField] private GridSerializeData gridSerializeData;
         [SerializeField] private List<ListOfNodes> grid = new List<ListOfNodes>();
         [SerializeField] private Node nodePrefab;
+        [SerializeField] private LayerMask gridLayerMask;
+        private static GridManager instance;
         #endregion
         #region Unity Methods
         // Start is called before the first frame update
         void Awake()
         {
+            instance = this;
             GenerateGrid();
         }
 
@@ -71,6 +74,7 @@ namespace AStar
                     Node node = Instantiate(nodePrefab, nd.Row[x].WorldPosition, Quaternion.identity, this.transform);
                     node.Setup(this, nd.Row[x]);
                     row.Row.Add(node);
+                    node.name=y.ToString() + ", " + x.ToString() ;
                 }
                 grid.Add(row);
             }
@@ -162,6 +166,20 @@ namespace AStar
                 temp = temp.Parent;
             } while (temp != Start && temp != null);
             return Path;
+        }
+        /// <summary>
+        /// To get instance of Grid Manager
+        /// </summary>
+        /// <returns>GridManager</returns>
+        public static GridManager GetInstance()
+        { return instance; }
+        /// <summary>
+        /// To get Layer Mask of Grid, use for detection, etc.
+        /// </summary>
+        /// <returns>Layer Mask that should be used for detecting grid elements</returns>
+        public LayerMask GetLayerMask()
+        {
+            return gridLayerMask;
         }
         #endregion
         /// <summary>

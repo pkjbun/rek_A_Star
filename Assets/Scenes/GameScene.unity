@@ -1313,6 +1313,9 @@ MonoBehaviour:
     Data: []
   grid: []
   nodePrefab: {fileID: 1105465595704637508, guid: 5c15c819f495f734ba5696457b379f6b, type: 3}
+  gridLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!4 &856996385
 Transform:
   m_ObjectHideFlags: 0
