@@ -9,6 +9,7 @@ public class UnitBase : MonoBehaviour, IUnit
     [SerializeField] private UnitStats unitStats=new UnitStats();
     [SerializeField] private Node currentNode;
     [SerializeField] private Collider[] coll=new Collider[1];
+    private Stack<Node> stack = new Stack<Node>();
     #endregion
   
     #region Unity Methods
@@ -65,5 +66,6 @@ public class UnitBase : MonoBehaviour, IUnit
             if(n != null) { currentNode = n; }
             }
         }
+        public Node GetCurrentNode() { return currentNode; }
     #endregion
 }

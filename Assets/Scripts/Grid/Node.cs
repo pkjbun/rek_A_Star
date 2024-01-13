@@ -100,7 +100,7 @@ namespace AStar
         }
         public Vector2 GetWorldPosition()
         {
-          return  nodeData.WorldPosition;
+          return  new Vector2 (nodeData.WorldPosition.x, nodeData.WorldPosition.z);
         }
         #endregion
     }

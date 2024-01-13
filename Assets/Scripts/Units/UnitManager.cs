@@ -1,3 +1,4 @@
+using AStar;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private UnitBase currentLeadingUnit;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private float spacing;
+    [SerializeField] private GridManager gridManager;
     private static UnitManager instance;
 
 
@@ -84,7 +86,17 @@ public class UnitManager : MonoBehaviour
     public void HandleMoveUnits()
     {
         //TODO:write it...
-    }  
+    } 
+    public void HandleInput(Node EndNode)
+    {
+        if (EndNode == null) { return; }
+        if(gridManager == null) { gridManager = GridManager.GetInstance(); }
+       Stack<Node> nodeStack= gridManager?.FindPath(currentLeadingUnit.GetCurrentNode(), EndNode);
+        foreach(Node node in nodeStack)
+        {
+            Debug.Log("Should walk thorought" + node.name);
+        }
+    }
     public static UnitManager GetInstance() {return instance;}
     #endregion
 }
