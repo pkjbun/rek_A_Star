@@ -20,29 +20,59 @@ namespace AStar
             GenerateGrid();
         }
 
-     
         #endregion
         #region Custom Methods   
+        /// <summary>
+        /// Generates Grid basing on grid data, before creating new Grid Clears old one
+        /// </summary>
+        [ContextMenu("Generate In Scene")]
         private void GenerateGrid()
         {
-            if(gridSerializeData!=null)
-            {
-                if(gridSerializeData.Data.Count==0)
+            
+                if (gridSerializeData.Data.Count == 0)
                 {
                     gridSerializeData.GenerateData();
                 }
-                for (int y = 0; y < gridSerializeData.Data.Count; y++)
+                ClearNodes();
+                GenerateGridFromData();
+            
+        }
+        /// <summary>
+        /// Clears Grid and destroys GameObjects before creating new data
+        /// </summary>
+        private void ClearNodes()
+        {
+            for(int i=0; i<grid.Count; i++)
+            {
+                List<Node> ln = grid[i].Row;
+                for (int j=0; j < grid[i].Row.Count;j++)
                 {
-                    ListOfNodes row = new ListOfNodes();
-                    GridSerializeData.ListNodeData nd = gridSerializeData.Data[y];
-                    for(int  x = 0; x< nd.Row.Count; x++)
-                    {
-                        Node node = Instantiate(nodePrefab, nd.Row[x].WorldPosition, Quaternion.identity, this.transform);
-                        node.Setup(this);
-                        row.Row.Add(node);
+                    if (Application.isPlaying)
+                    { if (ln != null) Destroy(ln[j].gameObject); }
+                    else
+                    {   //Destroys Immediate if in editor editing and testing
+                        DestroyImmediate(ln[j].gameObject);
                     }
-                    grid.Add(row);
                 }
+            }
+            grid.Clear();
+        }
+        /// <summary>
+        /// Actual GridCreation
+        /// </summary>
+        private void GenerateGridFromData()
+        {
+            for (int y = 0; y < gridSerializeData.Data.Count; y++)
+            {
+                ListOfNodes row = new ListOfNodes();
+                GridSerializeData.ListNodeData nd = gridSerializeData.Data[y];
+                for (int x = 0; x < nd.Row.Count; x++)
+                {
+                    Node node = Instantiate(nodePrefab, nd.Row[x].WorldPosition, Quaternion.identity, this.transform);
+                    node.Setup(this, nd.Row[x]);
+                    row.Row.Add(node);
+                }
+                grid.Add(row);
             }
         }
 
