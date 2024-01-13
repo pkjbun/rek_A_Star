@@ -1,3 +1,4 @@
+using AStar;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,7 @@ public interface IUnit
 {
 
     #region Custom Methods
-    public void MoveTo();
+    public void Move(Stack<Node> nodes);
     public void StopMoving();
     /// <summary>
     /// Used to Set Unit Stats

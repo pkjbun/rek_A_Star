@@ -1,3 +1,4 @@
+using AStar;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ public class UnitBase : MonoBehaviour, IUnit
 {
     #region Fields And Variables
     [SerializeField] private UnitStats unitStats=new UnitStats();
+    [SerializeField] private Node currentNode;
     #endregion
   
     #region Unity Methods
@@ -31,7 +33,10 @@ public class UnitBase : MonoBehaviour, IUnit
         {
          //   throw new System.NotImplementedException();
         }
-
+        /// <summary>
+        /// Sets Unit Stats
+        /// </summary>
+        /// <param name="Stats"> Stats to set</param>
         public void SetUnitStats(UnitStats Stats)
         {
         if (Stats != null) { unitStats = Stats; }
@@ -43,9 +48,8 @@ public class UnitBase : MonoBehaviour, IUnit
          //  throw new System.NotImplementedException();
         }
     /// <summary>
-    
+    /// Generates random Unit Stats in case of more complex game it would  be diffrent 
     /// </summary>
-    /// <param name="Stats"></param>
     public void UnitSetup()
     {
         unitStats.GenerateRandomStats();
