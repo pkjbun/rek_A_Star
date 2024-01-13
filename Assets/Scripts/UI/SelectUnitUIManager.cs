@@ -57,7 +57,9 @@ namespace AStar.UI {
                 {
                     Button buttonInst = Instantiate(buttonPrefab, buttonParent);
                     buttonDictionary.Add(buttonInst, i);
-                    buttonInst.onClick.AddListener(() => SelectUnitNr(buttonInst));
+                    // Create a local copy of buttonInst
+                    Button localButtonInst = buttonInst;
+                    buttonInst.onClick.AddListener(() => SelectUnitNr(localButtonInst));
                 }
             }
         }
