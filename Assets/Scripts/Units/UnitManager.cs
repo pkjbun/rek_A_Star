@@ -21,7 +21,7 @@ public class UnitManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        SpawnUnits();
     }
 
     // Update is called once per frame

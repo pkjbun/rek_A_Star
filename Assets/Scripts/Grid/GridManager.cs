@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Utils;
 
@@ -9,10 +10,42 @@ namespace AStar
     {
         #region Fields And Variables
         [SerializeField] private GridSerializeData gridSerializeData;
-        [SerializeField] private List<List<Node>> grid = new List<List<Node>>();
-        [SerializeField] private GameObject nodePrefab;
+        [SerializeField] private List<ListOfNodes> grid = new List<ListOfNodes>();
+        [SerializeField] private Node nodePrefab;
         #endregion
-        #region Custom Methods
+        #region Unity Methods
+        // Start is called before the first frame update
+        void Start()
+        {
+            GenerateGrid();
+        }
+
+     
+        #endregion
+        #region Custom Methods   
+        private void GenerateGrid()
+        {
+            if(gridSerializeData!=null)
+            {
+                if(gridSerializeData.Data.Count==0)
+                {
+                    gridSerializeData.GenerateData();
+                }
+                for (int y = 0; y < gridSerializeData.Data.Count; y++)
+                {
+                    ListOfNodes row = new ListOfNodes();
+                    GridSerializeData.ListNodeData nd = gridSerializeData.Data[y];
+                    for(int  x = 0; x< nd.Row.Count; x++)
+                    {
+                        Node node = Instantiate(nodePrefab, nd.Row[x].WorldPosition, Quaternion.identity, this.transform);
+                        node.Setup(this);
+                        row.Row.Add(node);
+                    }
+                    grid.Add(row);
+                }
+            }
+        }
+
         /// <summary>
         /// Returns Grid data, use for saving data
         /// </summary>
@@ -36,7 +69,7 @@ namespace AStar
             // Check if the x and y coordinates are within the bounds of the grid
             if (x >= 0 && x < gridSerializeData.Width && y >= 0 && y < gridSerializeData.Height)
             {
-                return grid[y][x];
+                return grid[y].Row[x];
             }
             else
             {
@@ -101,5 +134,13 @@ namespace AStar
             return Path;
         }
         #endregion
+        /// <summary>
+        /// Class to help serialize in Editor nad JSON;
+        /// </summary>
+        [System.Serializable]
+        public class ListOfNodes
+        {
+          public  List<Node>  Row= new List<Node>();
+        }
     }
 }

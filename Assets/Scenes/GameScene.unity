@@ -768,10 +768,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSerializeData:
-    Width: 0
-    Height: 0
+    Width: 12
+    Height: 12
     Data: []
-  nodePrefab: {fileID: 0}
+  grid: []
+  nodePrefab: {fileID: 1105465595704637508, guid: 5c15c819f495f734ba5696457b379f6b, type: 3}
 --- !u!4 &856996385
 Transform:
   m_ObjectHideFlags: 0
@@ -1484,10 +1485,10 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 94529205}
   - {fileID: 856996385}
   - {fileID: 266368139}
   - {fileID: 707699858}
+  - {fileID: 94529205}
   - {fileID: 1978949217}
   - {fileID: 656509361}
   - {fileID: 1926448474}
