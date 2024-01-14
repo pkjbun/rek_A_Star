@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Utils;
-
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace AStar
 {
@@ -71,7 +73,16 @@ namespace AStar
                 GridSerializeData.ListNodeData nd = gridSerializeData.Data[y];
                 for (int x = 0; x < nd.Row.Count; x++)
                 {
-                    Node node = Instantiate(nodePrefab, nd.Row[x].WorldPosition, Quaternion.identity, this.transform);
+                    Node node;
+                #if UNITY_EDITOR
+                                    node = PrefabUtility.InstantiatePrefab(nodePrefab) as Node;
+                                    node.transform.position = nd.Row[x].WorldPosition;
+                                    node.transform.rotation=Quaternion.identity;
+                                    node.transform.parent = this.transform;
+                #else
+                 node = Instantiate(nodePrefab, nd.Row[x].WorldPosition, Quaternion.identity, this.transform);
+                #endif
+
                     node.Setup(this, nd.Row[x]);
                     row.Row.Add(node);
                     node.name=y.ToString() + ", " + x.ToString() ;
