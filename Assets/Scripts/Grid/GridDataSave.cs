@@ -25,11 +25,18 @@ public class GridDataSave : MonoBehaviour
     }
     #endregion
     #region Custom Methods
+    /// <summary>
+    /// Use to save Grid Data
+    /// </summary>
     [ContextMenu("Save Grid data to file")]
     public async void WriteData()
     {
         await SaveGridDataAsync();
     }
+    public async void RestoreGridData()
+    {
+        await LoadGridDataAsync();
+    }    
     private async Task SaveGridDataAsync()
     {
         gridManager.UpdateGridSerializeData();
