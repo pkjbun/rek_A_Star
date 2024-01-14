@@ -166,13 +166,17 @@ public class UnitManager : MonoBehaviour
     } 
     IEnumerator MoveOther(Stack<Node> path)
     {
-        yield return new WaitForEndOfFrame();
-        for(int i=0; i<listOfUnits.Count; i++)
+        Stack<Node> copypath = Helper<Node>.CopyStack(path);
+        List<UnitBase> otherUnits = new List<UnitBase>(listOfUnits);
+        otherUnits.Remove(currentLeadingUnit);
+        for(int g= 0; g < otherUnits.Count; g++) 
+            { otherUnits[g].StopMoving(); }
+        yield return new WaitForSeconds(1.5f);
+        for(int i=0; i< otherUnits.Count; i++)
         {
-            
-            if (listOfUnits[i] != currentLeadingUnit) {Stack<Node> lp = Helper<Node>.CopyStack(path);
+           Stack<Node> lp = Helper<Node>.CopyStack(copypath);
 
-                listOfUnits[i].Move(lp); }
+            otherUnits[i].Move(lp); 
             yield return new WaitForEndOfFrame();
         }
     }
@@ -180,6 +184,7 @@ public class UnitManager : MonoBehaviour
     {
         if (EndNode == null) { return; }
         if(gridManager == null) { gridManager = GridManager.GetInstance(); }
+        if(currentLeadingUnit.GetCurrentNode() ==null) { currentLeadingUnit.DetectCurrentNode(); }
        Stack<Node> nodeStack= gridManager?.FindPath(currentLeadingUnit.GetCurrentNode(), EndNode);
         foreach(Node node in nodeStack)
         {

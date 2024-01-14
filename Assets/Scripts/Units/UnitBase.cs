@@ -47,7 +47,6 @@ public class UnitBase : MonoBehaviour, IUnit
         }
         IEnumerator MoveAlong()
         {
-        
         while (true)
             {
             if (currentNode == null)
