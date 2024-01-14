@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Utils;
+using static AStar.GridSerializeData;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -90,7 +92,23 @@ namespace AStar
                 grid.Add(row);
             }
         }
-
+        [ContextMenu("Update Grid Serialize Data")]
+        public void UpdateGridSerializeData()
+        {
+            gridSerializeData.Data.Clear();
+            for (int i = 0; i < grid.Count; i++)
+            {
+                ListNodeData row = new ListNodeData();
+                List<Node> ln = grid[i].Row;
+                
+                for (int j = 0; j < grid[i].Row.Count; j++)
+                {
+                    row.Row.Add(grid[i].Row[j].GetNodeData());
+                }
+                gridSerializeData.Data.Add(row);
+            }
+           
+        }
         /// <summary>
         /// Returns Grid data, use for saving data
         /// </summary>
@@ -102,6 +120,7 @@ namespace AStar
         public void RestoreGrid(GridSerializeData griddata)
         {
             gridSerializeData = griddata;
+            GenerateGrid();
         }
         /// <summary>
         /// Return node at specified coordinates
