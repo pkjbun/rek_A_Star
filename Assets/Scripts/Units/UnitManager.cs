@@ -19,7 +19,7 @@ public class UnitManager : MonoBehaviour
     private static UnitManager instance;
     public event Action OnAllUnitsSpawned;
     GameObject go;
-
+    List<UnitBase> otherUnits;
     #endregion
     #region Unity Methods
     private void Awake()
@@ -157,34 +157,71 @@ public class UnitManager : MonoBehaviour
     /// Move Units Along the path
     /// </summary>
     /// <param name="path"></param>
-    private void HandleMoveUnits(Stack<Node> path)
+    private async void HandleMoveUnits(Stack<Node> path)
     {
         Stack<Node> lp = Helper<Node>.CopyStack(path);
-       
+        otherUnits = new List<UnitBase>(listOfUnits);
+        otherUnits.Remove(currentLeadingUnit);
         currentLeadingUnit.Move(lp);
+        await SortUnitsByDistanceToLeaderAsync();
         StartCoroutine(MoveOther(path));
     } 
     IEnumerator MoveOther(Stack<Node> path)
     {
-        Stack<Node> copypath = Helper<Node>.CopyStack(path);
-        List<UnitBase> otherUnits = new List<UnitBase>(listOfUnits);
-        otherUnits.Remove(currentLeadingUnit);
         for(int g= 0; g < otherUnits.Count; g++) 
             { otherUnits[g].StopMoving(); }
         yield return new WaitForSeconds(1.5f);
         for(int i=0; i< otherUnits.Count; i++)
         {
-           Stack<Node> lp = Helper<Node>.CopyStack(copypath);
+           Stack<Node> lp = Helper<Node>.CopyStack(path);
 
             otherUnits[i].Move(lp); 
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0.1f);
         }
     }
+    /// <summary>
+    /// Sorts Other Units by distance to leader to ensure that they get to move in right order
+    /// </summary>
+    /// <returns></returns>
+    public async Task SortUnitsByDistanceToLeaderAsync()
+    {
+        if (currentLeadingUnit == null)
+        {
+            Debug.LogWarning("Current leading unit is not set.");
+            return;
+        }
+
+        // Capture positions on the main thread
+        Vector3 leaderPosition = currentLeadingUnit.transform.position;
+        List<(UnitBase unit, Vector3 position)> unitsWithPositions = new List<(UnitBase, Vector3)>();
+        foreach (var unit in otherUnits)
+        {
+            unitsWithPositions.Add((unit, unit.transform.position));
+        }
+
+        // Perform sorting on a background thread
+        await Task.Run(() =>
+        {
+            unitsWithPositions.Sort((tuple1, tuple2) =>
+            {
+                float distance1 = Vector3.Distance(tuple1.position, leaderPosition);
+                float distance2 = Vector3.Distance(tuple2.position, leaderPosition);
+                return distance1.CompareTo(distance2);
+            });
+        });
+
+        // Apply sorted order back on the main thread
+        for (int i = 0; i < unitsWithPositions.Count; i++)
+        {
+            otherUnits[i] = unitsWithPositions[i].unit;
+        }
+    }
+
     public void HandleInput(Node EndNode)
     {
         if (EndNode == null) { return; }
         if(gridManager == null) { gridManager = GridManager.GetInstance(); }
-        if(currentLeadingUnit.GetCurrentNode() ==null) { currentLeadingUnit.DetectCurrentNode(); }
+   currentLeadingUnit.DetectCurrentNode(); 
        Stack<Node> nodeStack= gridManager?.FindPath(currentLeadingUnit.GetCurrentNode(), EndNode);
         foreach(Node node in nodeStack)
         {
