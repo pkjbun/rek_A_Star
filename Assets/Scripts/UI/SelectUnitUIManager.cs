@@ -16,12 +16,31 @@ namespace AStar.UI {
         // Start is called before the first frame update
         void Start()
         {
-          StartCoroutine(  GenerateUnitButtons());
+            UnitManager.GetInstance().OnAllUnitsSpawned += SelectUnitUIManager_OnAllUnitsSpawned;
+            
         }
+
+        private void SelectUnitUIManager_OnAllUnitsSpawned()
+        {
+            GenerateUnitButtons();
+        }
+
         // Update is called once per frame
         void Update()
         {
 
+        }
+        private void OnDestroy()
+        {   /// probably this is not needed here but beter be safe than sorry
+            try
+            {
+                UnitManager.GetInstance().OnAllUnitsSpawned -= SelectUnitUIManager_OnAllUnitsSpawned;
+            }
+            catch (Exception)
+            {
+
+               //
+            }
         }
         #endregion
         #region Custom Methods
@@ -45,9 +64,9 @@ namespace AStar.UI {
         /// <summary>
         /// Method for generating unit
         /// </summary>
-        private IEnumerator GenerateUnitButtons()
+        private void GenerateUnitButtons()
         {
-            yield return new WaitForEndOfFrame();
+         
             if (buttonPrefab != null && buttonParent != null)
             {
                 List<UnitBase> ub = UnitManager.GetInstance()?.GetListOfUnit();
@@ -63,6 +82,7 @@ namespace AStar.UI {
                     buttonInst.onClick.AddListener(() => SelectUnitNr(localButtonInst));
                 }
             }
+          
         }
         #endregion
     }

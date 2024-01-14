@@ -2,32 +2,35 @@ using AStar;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
-
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 public class UnitManager : MonoBehaviour
 {
     #region Fields And Variables
-    [SerializeField] private UnitBase unitPrefab;
+    private UnitBase unitPrefab;
     [SerializeField] private List<UnitBase> listOfUnits=new List<UnitBase>();
     [SerializeField] private UnitBase currentLeadingUnit;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private float spacing;
     [SerializeField] private GridManager gridManager;
+    [SerializeField] private AssetReference unitReference;
     private static UnitManager instance;
-
+    public event Action OnAllUnitsSpawned;
+    GameObject go;
 
     #endregion
     #region Unity Methods
     private void Awake()
     {
         instance = this;
+        LoadPrefab();
     }
     // Start is called before the first frame update
     void Start()
     {
-        SpawnUnits();
-        SetCurrentLeadingUnit(0);
+        
     }
 
     // Update is called once per frame
@@ -35,28 +38,65 @@ public class UnitManager : MonoBehaviour
     {
         
     }
+    private void OnDestroy()
+    {   //I know that it will be released after unloading scene...
+        Addressables.Release(go);
+    }
     #endregion
     #region Custom Methods
+   
+     void LoadPrefab()
+    {
+        
+        unitReference.InstantiateAsync().Completed += OnPrefabLoaded;
+        
+    }
+
+    private void OnPrefabLoaded(AsyncOperationHandle<GameObject> handle)
+    {
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+        {
+            go = handle.Result;
+            UnitBase ub= go.GetComponent<UnitBase>();
+            unitPrefab = ub;
+            go.SetActive(false);
+           SpawnUnits();
+            SetCurrentLeadingUnit(0);
+        }
+        else
+        {
+            Debug.Log("Error loading UnitBase Adressable");
+        }
+    }
+
     /// <summary>
     /// Method for sapwning Units at start
     /// </summary>
     private void SpawnUnits()
     {
         int numberOfUnits = GameManager.GetInstance().GetNumberOfUnits();
-        
 
         for (int i = 0; i < numberOfUnits; i++)
         {
             Vector3 spawnPosition = CalculatePosition(spacing, i);
-
-            UnitStats us = new UnitStats();
             UnitBase newUnit = Instantiate(unitPrefab, spawnPosition, Quaternion.identity);
-            newUnit.SetUnitStats(us);
-            newUnit.UnitSetup();
-            newUnit.DetectCurrentNode();
-            listOfUnits.Add(newUnit);
+            AfterSpawnSet(newUnit);
         }
+        OnAllUnitsSpawned?.Invoke();
     }
+    /// <summary>
+    /// To Set Units after spawning
+    /// </summary>
+    /// <param name="newUnit"></param>
+    private void AfterSpawnSet(UnitBase newUnit)
+    {   newUnit.gameObject.SetActive(true);
+        UnitStats us = new UnitStats();
+        newUnit.SetUnitStats(us);
+        newUnit.UnitSetup();
+        newUnit.DetectCurrentNode();
+        listOfUnits.Add(newUnit);
+    }
+
     /// <summary>
     /// Simple placeholder method used for calculating position of units in scene during 
     /// </summary>

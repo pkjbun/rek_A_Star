@@ -13,7 +13,6 @@ public class UnitBase : MonoBehaviour, IUnit
     [SerializeField] float moveSpeed = 1f;
     private Stack<Node> path = new Stack<Node>();
     Coroutine moveRoutine;
-    public Event leadEndAction;
     // Delegate for unit events
     public delegate void UnitEventHandler(UnitBase unit);
 
@@ -109,12 +108,11 @@ public class UnitBase : MonoBehaviour, IUnit
     /// <summary>
     /// After Leading Unit ends his task all Units stops
     /// </summary>
-   
     public void ReceiveNotification()
     {
         StopMoving();
     }
-
+    // implemented just for IUnit
     public void ReceiveNotification(IUnit unit)
     {
       //
