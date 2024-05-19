@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 namespace AStar
 {
@@ -13,6 +14,8 @@ namespace AStar
         [SerializeField] private GridManager gridManager;
         public float CurrrentCost;
         public float DistanceToTarget;
+
+        public NodeData NodeData { get => nodeData; set => nodeData = value; }
         #endregion
         #region Unity Methods
         // Start is called before the first frame update
@@ -55,11 +58,14 @@ namespace AStar
             adjacencies = new List<Node>();
 
             adjacencies.Clear();
-
-            int[] dx = { 0, 1, 0, -1, -1,-1,1,1 }; // Directions for left, down, right, up, left down, left up, right down, right up
-            int[] dy = { -1, 0, 1, 0, -1, 1,-1,1 };
-
-            for (int i = 0; i < 8; i++)
+            /// Commented out, because Recruiter wanted only 4 directions
+            /* int[] dx = { 0, 1, 0, -1, -1,-1,1,1 }; // Directions for left, down, right, up, left down, left up, right down, right up
+             int[] dy = { -1, 0, 1, 0, -1, 1,-1,1 };
+             */
+            int[] dx = { 0, 1, 0, -1 }; // Directions for left, down, right, up
+            int[] dy = { -1, 0, 1, 0 };
+            ///
+            for (int i = 0; i < dx.Count(); i++)
             {
                 int adjX = nodeData.GridX + dx[i];
                 int adjY = nodeData.GridY + dy[i];

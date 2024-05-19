@@ -73,7 +73,7 @@ public class UnitManager : MonoBehaviour
     /// Method for sapwning Units at start
     /// </summary>
     private void SpawnUnits()
-    {
+    {   if(GameManager.GetInstance()==null) { Debug.LogWarning("No Game Manager"); return; }
         int numberOfUnits = GameManager.GetInstance().GetNumberOfUnits();
 
         for (int i = 0; i < numberOfUnits; i++)
@@ -98,7 +98,8 @@ public class UnitManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Simple placeholder method used for calculating position of units in scene during 
+    /// Simple placeholder method used for calculating position of units in scene during
+    /// spawn phase
     /// </summary>
     /// <param name="spacing">Space bettween Units</param>
     /// <param name="i">unit number</param>
@@ -221,12 +222,18 @@ public class UnitManager : MonoBehaviour
     {
         if (EndNode == null) { return; }
         if(gridManager == null) { gridManager = GridManager.GetInstance(); }
+        if(currentLeadingUnit == null) { Debug.Log("There is no leading unit, will not calculate path");
+            return;
+        }
    currentLeadingUnit.DetectCurrentNode(); 
        Stack<Node> nodeStack= gridManager?.FindPath(currentLeadingUnit.GetCurrentNode(), EndNode);
-        foreach(Node node in nodeStack)
-        {
-            Debug.Log("Should walk thorought" + node.name);
-        }
+       if(nodeStack==null ) {
+            Debug.Log("No path, is there no Grid Manager?");
+            return; }
+        //foreach(Node node in nodeStack)
+        //{
+        //    Debug.Log("Should walk thorought" + node.name);
+        //}
         if(nodeStack.Count > 0)
         {
             HandleMoveUnits(nodeStack);

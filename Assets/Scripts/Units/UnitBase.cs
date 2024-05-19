@@ -6,11 +6,16 @@ using UnityEngine;
 
 public class UnitBase : MonoBehaviour, IUnit
 {
+   
+
     #region Fields And Variables
     [SerializeField] private UnitStats unitStats=new UnitStats();
     [SerializeField] private Node currentNode;
     [SerializeField] private Collider[] coll=new Collider[1];
     [SerializeField] float moveSpeed = 1f;
+    [SerializeField] private Animator animator; // Animator reference
+    [SerializeField] private string ParamterOfMove = "Speed"; 
+    [SerializeField] private float ParamterValWhileMoving = 4f;
     private Stack<Node> path = new Stack<Node>();
     Coroutine moveRoutine;
     // Delegate for unit events
@@ -47,6 +52,10 @@ public class UnitBase : MonoBehaviour, IUnit
         }
         IEnumerator MoveAlong()
         {
+        if (animator != null)
+        {
+            animator.SetFloat(ParamterOfMove, ParamterValWhileMoving); // Set isMoving to false
+        }
         while (true)
             {
             if (currentNode == null)
@@ -83,6 +92,10 @@ public class UnitBase : MonoBehaviour, IUnit
 
         public void StopMoving()
         {
+        if (animator != null)
+        {
+            animator.SetFloat(ParamterOfMove, 0); // Set isMoving to false
+        }
         if (moveRoutine != null) StopCoroutine(moveRoutine);
         DetectCurrentNode();
         }

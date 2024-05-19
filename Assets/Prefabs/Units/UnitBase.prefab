@@ -243,4 +243,6 @@ MonoBehaviour:
   currentNode: {fileID: 0}
   coll:
   - {fileID: 0}
-  moveSpeed: 1
+  moveSpeed: 3
+  animator: {fileID: 0}
+  BoolOfMovingAnimation: isMoving

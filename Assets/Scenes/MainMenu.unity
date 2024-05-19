@@ -662,7 +662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f19918c4b5fdb4098ed979cf4e0150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfUnits: 3
+  numberOfUnits: 1
 --- !u!4 &806162347
 Transform:
   m_ObjectHideFlags: 0
@@ -841,9 +841,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77f7be897e453854db7ee11d81067cac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minNumberOfUnits: 3
+  minNumberOfUnits: 1
   maxNumberOfUnits: 10
-  currentNumberOfUnits: 3
+  currentNumberOfUnits: 1
   numberOfUnitsIndicator: {fileID: 962643667}
   increaseNumberOfUnitsButton: {fileID: 1396475011}
   decreaseNumberOfUnitsButton: {fileID: 209074872}
@@ -921,7 +921,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 3
+  m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

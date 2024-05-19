@@ -12,12 +12,16 @@ namespace AStar
 {
     public class GridManager : MonoBehaviour
     {
+    
         #region Fields And Variables
         [SerializeField] private GridSerializeData gridSerializeData;
         [SerializeField] private List<ListOfNodes> grid = new List<ListOfNodes>();
         [SerializeField] private Node nodePrefab;
         [SerializeField] private LayerMask gridLayerMask;
         private static GridManager instance;
+        [SerializeField] private bool shouldVisualizePath = true;
+        [SerializeField] private LineRenderer lineRenderer;
+        [SerializeField] private  float VisualisationCorrection = 1f;
         #endregion
         #region Unity Methods
         // Start is called before the first frame update
@@ -58,7 +62,7 @@ namespace AStar
                     { if (ln != null) Destroy(ln[j].gameObject); }
                     else
                     {   //Destroys Immediate if in editor editing and testing
-                        DestroyImmediate(ln[j].gameObject);
+                        if (ln != null) DestroyImmediate(ln[j].gameObject);
                     }
                 }
             }
@@ -195,6 +199,7 @@ namespace AStar
                 Path.Push(temp);
                 temp = temp.Parent;
             } while (temp != Start && temp != null);
+            if(shouldVisualizePath) { DrawPath(Path); }
             return Path;
         }
         /// <summary>
@@ -210,6 +215,19 @@ namespace AStar
         public LayerMask GetLayerMask()
         {
             return gridLayerMask;
+        }
+        /// <summary>
+        /// Simple Path Visualization
+        /// </summary>
+        /// <param name="path">Path to visualize</param>
+        public void DrawPath(Stack<Node> path)
+        {
+            Node[] pathArray = path.ToArray();
+            lineRenderer.positionCount = path.Count;
+            for (int i = 0; i < path.Count; i++)
+            {
+                lineRenderer.SetPosition(i, pathArray[i].transform.position + Vector3.up * VisualisationCorrection);
+            }
         }
         #endregion
         /// <summary>

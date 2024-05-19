@@ -29,6 +29,9 @@ namespace AStar.Inputs
                 DetectNode();
             }
         }
+       
+        #endregion
+        #region Custom Methods
         /// <summary>
         /// Detects Node and Sends this Node to UnitsManager
         /// </summary>
@@ -51,9 +54,6 @@ namespace AStar.Inputs
                 }
             }
         }
-        #endregion
-        #region Custom Methods
-
         #endregion
     }
 }
