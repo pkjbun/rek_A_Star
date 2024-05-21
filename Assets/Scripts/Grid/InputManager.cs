@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+
 namespace AStar.Inputs
 {
     public class InputManager : MonoBehaviour
@@ -9,6 +11,7 @@ namespace AStar.Inputs
         [SerializeField] Camera mainCamera;
         [SerializeField] LayerMask layerMask;
         [SerializeField] UnitManager unitManager;
+        [SerializeField] bool DetectClick=true;
         #endregion
         #region Unity Methods
         // Start is called before the first frame update
@@ -24,7 +27,11 @@ namespace AStar.Inputs
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (IsPointerOverUIElement())
+            {
+                return;
+            }
+            if (Input.GetMouseButtonDown(0) && DetectClick)
             {
                 DetectNode();
             }
@@ -53,6 +60,21 @@ namespace AStar.Inputs
                     unitManager?.HandleInput(node);
                 }
             }
+        }
+        /// <summary>
+        /// used to stop detecting when placing obstacle
+        /// </summary>
+        public void ToggleDetecting()
+        {
+            DetectClick = !DetectClick;
+        }
+        /// <summary>
+        /// Use to disable input when mouse is over UI
+        /// </summary>
+        /// <returns></returns>
+        private bool IsPointerOverUIElement()
+        {
+            return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
         }
         #endregion
     }

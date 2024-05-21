@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3001984068948607900}
   - component: {fileID: 1105465595704637508}
+  - component: {fileID: 3511660449114289562}
   m_Layer: 6
   m_Name: Node
   m_TagString: Untagged
@@ -54,8 +55,32 @@ MonoBehaviour:
     Cost: 0
     IsWalkable: 0
   gridManager: {fileID: 0}
+  obstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
   CurrrentCost: 0
   DistanceToTarget: 0
+--- !u!65 &3511660449114289562
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3888637873595185726}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.48, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5741589089503907345
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,7 +182,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 1.2, z: 1}
   m_Center: {x: 0, y: 0, z: 0}

@@ -12,22 +12,30 @@ namespace AStar
         [SerializeField] private List<Node> adjacencies = new List<Node>();
         [SerializeField] private NodeData nodeData;
         [SerializeField] private GridManager gridManager;
+        [SerializeField] private LayerMask obstacleLayerMask;
         public float CurrrentCost;
         public float DistanceToTarget;
 
         public NodeData NodeData { get => nodeData; set => nodeData = value; }
         #endregion
         #region Unity Methods
-        // Start is called before the first frame update
-        void Start()
+        
+        void OnTriggerEnter(Collider other)
         {
-
+            if (((1 << other.gameObject.layer) & obstacleLayerMask) != 0)
+            {
+                nodeData.IsWalkable = false;
+                Debug.Log($"Node {name} is now not walkable due to obstacle.");
+            }
         }
 
-        // Update is called once per frame
-        void Update()
+        void OnTriggerExit(Collider other)
         {
-
+            if (((1 << other.gameObject.layer) & obstacleLayerMask) != 0)
+            {
+                nodeData.IsWalkable = true;
+                Debug.Log($"Node {name} is now walkable again as obstacle is removed.");
+            }
         }
         #endregion
         #region Custom Methods
